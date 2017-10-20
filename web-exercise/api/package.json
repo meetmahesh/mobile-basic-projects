@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/hiyainc/mobile-basic-projects#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "moment": "^2.19.1"
   }
 }
