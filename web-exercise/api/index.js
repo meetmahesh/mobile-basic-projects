@@ -6,8 +6,10 @@ app.get('/', function (req, res) {
   res.send('GET /call_log for json call log data')
 })
 
+const data = callLogData()
+
 app.get('/call_log', function (req, res) {
-  res.json(callLogData())
+  res.json(data)
 })
 
 app.listen(3000, function () {
