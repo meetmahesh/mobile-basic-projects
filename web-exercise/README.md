@@ -19,7 +19,7 @@ As a user, I can see a list of calls (incoming and outgoing).
 
 ## Requirements
 
-* Up to 50 of the most recent calls should be displayed.
+* Up to 10 of the most recent calls should be displayed.
 * Call log data can be fetched from the [example server](api). Follow the
   instructions in that README to get started.
 * The app should responsive, supporting at least two breakpoints.
