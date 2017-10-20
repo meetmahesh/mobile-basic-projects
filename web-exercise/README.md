@@ -20,7 +20,8 @@ As a user, I can see a list of calls (incoming and outgoing).
 ## Requirements
 
 * Up to 50 of the most recent calls should be displayed.
-* Call log data can be fetched from this endpoint: (tbd).
+* Call log data can be fetched from the [example server](api). Follow the
+  instructions in that README to get started.
 * The app should responsive, supporting at least two breakpoints.
 
 Each call should show the following information:
@@ -29,7 +30,6 @@ Each call should show the following information:
 * Call direction (incoming, outgoing)
 * Timestamp
 * Identity (name) or Reputation (spam or scam) if available.
-
 
 ## Extra Credit
 
