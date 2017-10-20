@@ -1,10 +1,15 @@
 const express = require('express')
+const callLogData = require('./callLogData')
 const app = express()
 
 app.get('/', function (req, res) {
-  res.send('Hello World!')
+  res.send('GET /call_log for json call log data')
+})
+
+app.get('/call_log', function (req, res) {
+  res.json(callLogData())
 })
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!')
+  console.log('call log api listening on port 3000')
 })
