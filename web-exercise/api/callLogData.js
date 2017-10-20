@@ -107,5 +107,5 @@ module.exports = function() {
     },
   ]
 
-  return data.sort((a, b) => a.utcTimestamp - b.utcTimestamp)
+  return data.sort((a, b) => b.utcTimestamp - a.utcTimestamp)
 }
