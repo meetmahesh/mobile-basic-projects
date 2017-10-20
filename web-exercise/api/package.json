@@ -1,0 +1,22 @@
+{
+  "name": "call-log-api",
+  "version": "1.0.0",
+  "description": "API that serves example call log data",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiyainc/mobile-basic-projects.git"
+  },
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/hiyainc/mobile-basic-projects/issues"
+  },
+  "homepage": "https://github.com/hiyainc/mobile-basic-projects#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "moment": "^2.19.1"
+  }
+}
