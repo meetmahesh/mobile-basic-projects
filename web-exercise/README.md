@@ -1,10 +1,10 @@
-# Call log web app
+# Call log web application
 
 ## Objective
 
-This is a small exercise for you to complete so we can gen an idea of your
-coding ability. Please provide instructions for how to set up and run your
-solution, including installing dependencies.
+This is a small web application exercise for you to complete so we can generate an 
+idea of your coding ability. Please provide instructions for how to 
+set up and run your solution, including installing dependencies.
 
 ## Expectations
 
@@ -15,14 +15,15 @@ project that will be delivered to customers.
 
 ## User Story
 
-As a user, I can see a list of calls (incoming and outgoing).
+As a user, I can see a list of calls (incoming and outgoing). 
 
 ## Requirements
 
 * Up to 10 of the most recent calls should be displayed.
-* Call log data can be fetched from the [example server](api). Follow the
+* Call log data can be fetched from the [example server](https://github.com/hiyainc/mobile-basic-projects/tree/master/web-exercise/api). Follow the
   instructions in that README to get started.
-* The app should responsive, supporting at least two breakpoints.
+* Mocks and assets can be found within the [web exercise directory](https://github.com/hiyainc/mobile-basic-projects/tree/master/web-exercise)
+* The application should responsive, supporting at least two breakpoints.
 
 Each call should show the following information:
 
@@ -32,7 +33,7 @@ Each call should show the following information:
 * Identity (name) or Reputation (spam or scam) if available.
 
 ## Extra Credit
-
+ 
 * Automated tests - you should write automated tests as you see fit.
 * Additional responsive breakpoints
 * Separate call log by date
@@ -49,7 +50,7 @@ in your own git space.
 
 ## Checklist
 
-- [ ] Is the app responsive?
+- [ ] Is the application responsive?
 - [ ] Is the code modular?
 - [ ] Have you run a linter?
 - [ ] Did you include setup instructions?
