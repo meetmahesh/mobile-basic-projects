@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Custom Call Logs</string>
+    <string name="incomingCallType">Incoming</string>
+    <string name="outgoingCallType">Outgoing</string>
+    <string name="missedCallType">Missed</string>
+    <string name="callLogs">Call Log</string>
+</resources>
