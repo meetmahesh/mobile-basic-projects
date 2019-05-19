@@ -1,7 +1,14 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data class = "LogEntryViewBinding">
+        <variable
+            name="calllogmodel"
+            type="com.mahesh.customcalllogs.logdatamodel.LogEntry"/>
+    </data>
+
 
     <LinearLayout
         android:id="@+id/layout_section_label"
@@ -36,14 +43,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:textSize="20dp" />
+                    android:textSize="20sp"
+                    android:text="@{calllogmodel.number}" />
                 <TextView
                     android:id="@+id/logDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:textSize="20dp"
-                    android:textAlignment="gravity" />
+                    android:textSize="18sp"
+                    android:textAlignment="gravity"
+                    android:text="@{calllogmodel.date}" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,15 +65,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
-                    android:textSize="20dp"
-                    android:textAlignment="gravity" />
+                    android:textSize="20sp"
+                    android:text="@{calllogmodel.callType}"
+                    android:textAlignment="center" />
             </LinearLayout>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/colorSeperator"/>
+            android:background="@color/colorSeparator"/>
     </LinearLayout>
-
-</LinearLayout>
+</layout>
