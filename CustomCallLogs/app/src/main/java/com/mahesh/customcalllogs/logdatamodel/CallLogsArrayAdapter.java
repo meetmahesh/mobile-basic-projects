@@ -2,7 +2,6 @@ package com.mahesh.customcalllogs.logdatamodel;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.databinding.DataBindingUtil;
 import android.provider.CallLog;
 import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
@@ -14,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mahesh.customcalllogs.R;
-import com.mahesh.customcalllogs.databinding.LogEntryViewBinding;
 import com.mahesh.customcalllogs.util.CallLogUtils;
 
 import java.util.ArrayList;
@@ -52,15 +50,9 @@ public class CallLogsArrayAdapter extends ArrayAdapter<LogEntry> {
         // Get the data item for this position
         LogEntry currEntry = getItem(position);
 
-        LogEntryViewBinding logEntryViewBinding;
-
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.call_log_item, parent, false);
-            logEntryViewBinding = DataBindingUtil.bind(convertView);
-            convertView.setTag(logEntryViewBinding);
-        } else {
-            logEntryViewBinding = (LogEntryViewBinding)convertView.getTag();
         }
 
         // Update the background color for the row
@@ -84,8 +76,7 @@ public class CallLogsArrayAdapter extends ArrayAdapter<LogEntry> {
         ivImage.setImageDrawable(AppCompatResources.getDrawable(convertView.getContext(), currEntry.getCallTypeResource()));
 
         // Return the completed view to render on screen
-        logEntryViewBinding.setCalllogmodel(mLogList.get(position));
-        return logEntryViewBinding.getRoot();
+        return convertView;
     }
 
     // Read the call logs from content provider of call log

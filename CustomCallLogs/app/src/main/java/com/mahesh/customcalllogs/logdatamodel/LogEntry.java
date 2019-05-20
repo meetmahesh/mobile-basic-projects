@@ -1,12 +1,11 @@
 package com.mahesh.customcalllogs.logdatamodel;
 
-import android.databinding.BaseObservable;
 import android.provider.CallLog;
 import com.mahesh.customcalllogs.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class LogEntry extends BaseObservable {
+public class LogEntry {
     private String number;
     private String date;
     private String callType;
