@@ -1,6 +1,9 @@
 package com.mahesh.customcalllogs.logdatamodel;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.provider.CallLog;
 import android.support.v7.content.res.AppCompatResources;
@@ -19,24 +22,31 @@ import java.util.ArrayList;
 
 public class CallLogsArrayAdapter extends ArrayAdapter<LogEntry> {
 
+    // Max entries shown to the user
+    private final int MAX_ENTRIES = 50;
+
+    // Array list to hold the call log data
     private ArrayList<LogEntry> mLogList;
-    private Context mContext;
+
+    // check for Call log permission if granted
+    private boolean callLogPermissionGranted = false;
 
     public CallLogsArrayAdapter(Context context, ArrayList<LogEntry> callLogEntry) {
         super(context, R.layout.call_log_item, callLogEntry);
         mLogList = callLogEntry;
-        mContext = context;
+        context.registerReceiver(mReceiver, new IntentFilter(CallLogUtils.ACTION_UPDATE_LOG_ENTRY));
     }
 
-    @Override
-    public int getCount() {
-        return mLogList.size();
+    public void setCallLogPermissionGranted (boolean permission) {
+        callLogPermissionGranted = permission;
     }
 
-    @Override
-    public LogEntry getItem(int pos) {
-        return mLogList.get(pos);
-    }
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            notifyDataSetChanged();
+        }
+    };
 
     @Override
     public void notifyDataSetChanged() {
@@ -82,35 +92,38 @@ public class CallLogsArrayAdapter extends ArrayAdapter<LogEntry> {
     // Read the call logs from content provider of call log
     // and store the records in an array list
     private void readCallLogs() {
-        // First clear the existing records
-        mLogList.clear();
+        if (callLogPermissionGranted) {
+            // Clear the existing records from array
+            mLogList.clear();
 
-        int currentEntry = 0;
+            int currentEntry = 0;
 
-        // Get the call logs records from content provider in descending order of date-time
-        Cursor callLogCursor = mContext.getContentResolver().query(
-                CallLog.Calls.CONTENT_URI, null, null, null,
-                CallLog.Calls.DEFAULT_SORT_ORDER);
-        if (callLogCursor != null) {
-            // iterate through the records, and store in the array list
-            while (callLogCursor.moveToNext()) {
-                String number = callLogCursor.getString(callLogCursor
-                        .getColumnIndex(CallLog.Calls.NUMBER));
-                int callType = callLogCursor.getInt(callLogCursor
-                        .getColumnIndex(CallLog.Calls.TYPE));
-                long dateTimeMillis = callLogCursor.getLong(callLogCursor
-                        .getColumnIndex(CallLog.Calls.DATE));
+            // Get the call logs records from content provider in descending order of date-time
+            Cursor callLogCursor = getContext().getContentResolver().query(
+                    CallLog.Calls.CONTENT_URI, null, null, null,
+                    CallLog.Calls.DEFAULT_SORT_ORDER);
+            if (callLogCursor != null) {
+                // iterate through the records, and store in the array list
+                while (callLogCursor.moveToNext()) {
+                    String number = callLogCursor.getString(callLogCursor
+                            .getColumnIndex(CallLog.Calls.NUMBER));
+                    int callType = callLogCursor.getInt(callLogCursor
+                            .getColumnIndex(CallLog.Calls.TYPE));
+                    long dateTimeMillis = callLogCursor.getLong(callLogCursor
+                            .getColumnIndex(CallLog.Calls.DATE));
 
-                LogEntry callLogentry = new LogEntry(number, dateTimeMillis, callType);
+                    LogEntry callLogentry = new LogEntry(number, dateTimeMillis, callType);
 
-                mLogList.add(callLogentry);
+                    mLogList.add(callLogentry);
 
-                if(++currentEntry >= CallLogUtils.MAX_ENTRIES) {
-                    // exit the while loop after reading max record
-                    break;
+                    if (++currentEntry >= MAX_ENTRIES) {
+                        // exit the while loop after reading max record
+                        break;
+                    }
                 }
+                callLogCursor.close();
             }
-            callLogCursor.close();
         }
+        getContext().sendBroadcast(new Intent(CallLogUtils.ACTION_UPDATE_SWIPE_UI));
     }
 }

@@ -12,8 +12,8 @@ public class CallLogUtils {
     // intent for updating entries for call log
     public static final String ACTION_UPDATE_LOG_ENTRY = "com.mahesh.customcalllogs.updateCallLog";
 
-    // Max entries shown to the user
-    public static final int MAX_ENTRIES = 50;
+    // intent for updating Swipe UI after updating the logs
+    public static final String ACTION_UPDATE_SWIPE_UI = "com.mahesh.customcalllogs.updateSwipeUI";
 
     public static void showAlertDialogForCallLogPermission (final Activity activity) {
         showAlertDialog(activity,
