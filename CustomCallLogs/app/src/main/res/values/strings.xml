@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">Custom Call Logs</string>
-    <string name="permissionDeniedMessageForCallLog">Call logs can not be shown without permission</string>
-    <string name="permissionDeniedMessageForPhoneState">To update the logs dynamically after call ends, phone calls permission is required</string>
-    <string name="permissionDeniedTitle">Permission denied</string>
-    <string name="dialogButton">OK</string>
-    <string name="exitButton">Exit Application</string>
+    <string name="incomingCallType">Incoming</string>
+    <string name="outgoingCallType">Outgoing</string>
+    <string name="missedCallType">Missed</string>
+    <string name="callLogs">Call Log</string>
 </resources>
