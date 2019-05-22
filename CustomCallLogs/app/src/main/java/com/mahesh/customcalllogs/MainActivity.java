@@ -23,11 +23,14 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     // Array for entries of call logs
-    public static ArrayList<LogEntry> allCallList;
+    public ArrayList<LogEntry> allCallList;
 
     // List view for call log entries
     ListView mainListView;
     CallLogsArrayAdapter listAdapter;
+
+    // For updating logs dynamically after call ends
+    CallReceiver mCallReceiver;
 
     // Layout for pull-to refresh feature
     SwipeRefreshLayout pullToRefresh;
@@ -38,55 +41,57 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.READ_PHONE_STATE
     };
 
-    // Flag for checking the permissions
-    private boolean callLogPermissionGranted = false;
-
-    // Updating call logs dynamically after call ends
-    CallReceiver mCallReceiver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Add the entries of call logs from array to list view
+        mainListView = (ListView) findViewById(R.id.listView);;
+        allCallList = new ArrayList<LogEntry>();
+        listAdapter = new CallLogsArrayAdapter(this, allCallList);
+        mainListView.setAdapter(listAdapter);
+
         // Show popup for dangerous permission
         checkPermissionGranted();
 
-        allCallList = new ArrayList<LogEntry>();
-
-        // register intent for updating call log entries
-        IntentFilter updateLogAndUI = new IntentFilter();
-        updateLogAndUI.addAction(CallLogUtils.ACTION_UPDATE_LOG_ENTRY);
-        this.registerReceiver(mReceiver, updateLogAndUI);
-
-        // Add the entries of call logs from array to list view
-        mainListView = (ListView) findViewById(R.id.listView);;
-        listAdapter = new CallLogsArrayAdapter(this, allCallList);
-        mainListView.setAdapter(listAdapter);
+        IntentFilter updateSwipeUI = new IntentFilter();
+        updateSwipeUI.addAction(CallLogUtils.ACTION_UPDATE_SWIPE_UI);
+        this.registerReceiver(mReceiver, updateSwipeUI);
 
         // Logic to update the entries of call log, when user pull down the list view
         pullToRefresh = findViewById(R.id.pullToRefresh);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                readCallLogs();
+                sendBroadcast(new Intent(CallLogUtils.ACTION_UPDATE_LOG_ENTRY));
             }
         });
 
-        readCallLogs();
+        sendBroadcast(new Intent(CallLogUtils.ACTION_UPDATE_LOG_ENTRY));
     }
+
+    // After updating logs in ListView, hide the progress bar of swipe layout
+    // As logs are updated asynchronously, progress bar will also update asynchronously
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (pullToRefresh != null) {
+                pullToRefresh.setRefreshing(false);
+            }
+        }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
+        // super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (permissions.length > 0) {
             for (int i = 0; i < permissions.length; i++) {
                 if (PERMISSIONS[0].equals(permissions[i])) { // For Call Log permission
                     if (grantResults[i] == PackageManager.PERMISSION_GRANTED) { // permission is granted for call log
-                        callLogPermissionGranted = true;
-                        // Read the call log entries and add to array
-                        readCallLogs();
+                        listAdapter.setCallLogPermissionGranted(true);
+
+                        sendBroadcast(new Intent(CallLogUtils.ACTION_UPDATE_LOG_ENTRY));
                     } else {
                         // Show the pop up for permission denied
                         CallLogUtils.showAlertDialogForCallLogPermission(this);
@@ -109,15 +114,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == CallLogUtils.ACTION_UPDATE_LOG_ENTRY) {
-                readCallLogs();
-            }
-        }
-    };
-
     // Check if user granted the permissions
     // if not, request him to grant the permission
     private void checkPermissionGranted() {
@@ -125,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, PERMISSIONS[0]) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions = true;
         } else {
-            callLogPermissionGranted = true;
+            listAdapter.setCallLogPermissionGranted(true);
         }
 
         if (ActivityCompat.checkSelfPermission(this, PERMISSIONS[1]) != PackageManager.PERMISSION_GRANTED) {
@@ -149,18 +145,6 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter forCallState = new IntentFilter();
         forCallState.addAction("android.intent.action.PHONE_STATE");
         this.registerReceiver(mCallReceiver, forCallState);
-    }
-
-    // Read the call logs from content provider of call log
-    // and store the records in an array list
-    private void readCallLogs() {
-
-        if(!callLogPermissionGranted)
-            return;
-
-        if(listAdapter != null) listAdapter.notifyDataSetChanged();
-        if(mainListView!= null) mainListView.invalidateViews();
-        if(pullToRefresh != null) pullToRefresh.setRefreshing(false);
     }
 
 }
