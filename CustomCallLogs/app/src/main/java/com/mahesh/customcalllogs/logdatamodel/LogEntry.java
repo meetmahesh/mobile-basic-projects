@@ -1,11 +1,12 @@
 package com.mahesh.customcalllogs.logdatamodel;
 
+import android.databinding.BaseObservable;
 import android.provider.CallLog;
 import com.mahesh.customcalllogs.R;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class LogEntry {
+public class LogEntry extends BaseObservable {
     private String number;
     private String date;
     private String callType;
@@ -48,7 +49,7 @@ public class LogEntry {
     }
 
     // type of call
-    public int getCallTypeResource() {
+    public int getCallImageResource() {
         return callImageResource;
     }
 

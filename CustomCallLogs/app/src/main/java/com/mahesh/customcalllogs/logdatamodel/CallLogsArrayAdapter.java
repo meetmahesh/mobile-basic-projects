@@ -5,17 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.provider.CallLog;
 import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.mahesh.customcalllogs.R;
+import com.mahesh.customcalllogs.databinding.LogEntryViewBinding;
 import com.mahesh.customcalllogs.util.CallLogUtils;
 
 import java.util.ArrayList;
@@ -44,25 +44,22 @@ public class CallLogsArrayAdapter extends ArrayAdapter<LogEntry> {
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            notifyDataSetChanged();
+            readCallLogs();
         }
     };
 
     @Override
-    public void notifyDataSetChanged() {
-        readCallLogs();
-
-        super.notifyDataSetChanged();
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
-        LogEntry currEntry = getItem(position);
+
+        LogEntryViewBinding logEntryViewBinding;
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.call_log_item, parent, false);
+            logEntryViewBinding = DataBindingUtil.bind(convertView);
+            convertView.setTag(logEntryViewBinding);
+        } else {
+            logEntryViewBinding = (LogEntryViewBinding)convertView.getTag();
         }
 
         // Update the background color for the row
@@ -73,20 +70,9 @@ public class CallLogsArrayAdapter extends ArrayAdapter<LogEntry> {
             lytCallLog.setBackgroundColor(AppCompatResources.getColorStateList(getContext(), R.color.colorLogItemOdd).getDefaultColor());
         }
 
-        // Lookup view for data population
-        TextView tvPhone = (TextView) convertView.findViewById(R.id.logPhoneNumber);
-        TextView tvDate = (TextView) convertView.findViewById(R.id.logDate);
-        TextView tvType = (TextView) convertView.findViewById(R.id.logType);
-        ImageView ivImage = (ImageView) convertView.findViewById(R.id.logImage);
-
-        // Populate the data into the template view using the data object
-        tvPhone.setText(currEntry.getNumber());
-        tvDate.setText(currEntry.getDate());
-        tvType.setText(currEntry.getCallType());
-        ivImage.setImageDrawable(AppCompatResources.getDrawable(convertView.getContext(), currEntry.getCallTypeResource()));
-
         // Return the completed view to render on screen
-        return convertView;
+        logEntryViewBinding.setCalllogmodel(mLogList.get(position));
+        return logEntryViewBinding.getRoot();
     }
 
     // Read the call logs from content provider of call log
@@ -124,6 +110,7 @@ public class CallLogsArrayAdapter extends ArrayAdapter<LogEntry> {
                 callLogCursor.close();
             }
         }
+        notifyDataSetChanged();
         getContext().sendBroadcast(new Intent(CallLogUtils.ACTION_UPDATE_SWIPE_UI));
     }
 }
