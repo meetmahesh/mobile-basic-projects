@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FF5503C7</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorSeperator">#99009900</color>
+    <color name="colorLogItemEven">#37FFD600</color>
+    <color name="colorLogItemOdd">#2000B8D4</color>
+</resources>
